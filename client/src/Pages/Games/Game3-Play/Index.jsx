@@ -7,7 +7,7 @@ import './index.css'
 const Index = () => {
   return (
     <div>
-      <div className="content3"><h1>GAME 3</h1></div>
+      <div className="content3"><h1></h1></div>
       {/* <Link to='/game4-instruct'>
           <Button>CLICK HERE</Button>
       </Link> */}

@@ -1,106 +1,114 @@
-import React, {useState, useEffect} from 'react'
-import {Routes, Route, useNavigate} from 'react-router-dom';
-import './Game3.css'
-
-
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Game3 = () => {
   const navigate = useNavigate();
-  
-  const stringArray = [['r', 'e', 'g', 'a', 'l'], ['r', 'i', 'v', 'a', 'l'], ['c', 'h', 'o', 'm', 'p'], ['c', 'h', 'a', 'r', 's'],  ['s', 'p', 'a', 'c', 'e'], ['s', 't', 'a', 'm', 'p'], ['l', 'i', 'v', 'e', 's'], ['r', 'e', 'g', 'a', 'l'], ['r', 'i', 'v', 'a', 'l'], ['c', 'h', 'o', 'm', 'p'], ['c', 'h', 'a', 'r', 's'],  ['s', 'p', 'a', 'c', 'e'], ['s', 't', 'a', 'm', 'p'], ['l', 'i', 'v', 'e', 's'], ['r', 'e', 'g', 'a', 'l'], ['r', 'i', 'v', 'a', 'l'], ['c', 'h', 'o', 'm', 'p'], ['c', 'h', 'a', 'r', 's'],  ['s', 'p', 'a', 'c', 'e'], ['s', 't', 'a', 'm', 'p'], ['l', 'i', 'v', 'e', 's']]
-  const stringArray2 = [['r', 'e', 'g', 'a', 'l'], ['r', 'i', 'v', 'a', 'l'], ['c', 'h', 'o', 'm', 'p'], ['c', 'h', 'a', 'r', 's'],  ['s', 'p', 'a', 'c', 'e'], ['s', 't', 'a', 'm', 'p'], ['l', 'i', 'v', 'e', 's'], ['r', 'e', 'g', 'a', 'l'], ['r', 'i', 'v', 'a', 'l'], ['c', 'h', 'o', 'm', 'p'], ['c', 'h', 'a', 'r', 's'],  ['s', 'p', 'a', 'c', 'e'], ['s', 't', 'a', 'm', 'p'], ['l', 'i', 'v', 'e', 's'], ['r', 'e', 'g', 'a', 'l'], ['r', 'i', 'v', 'a', 'l'], ['c', 'h', 'o', 'm', 'p'], ['c', 'h', 'a', 'r', 's'],  ['s', 'p', 'a', 'c', 'e'], ['s', 't', 'a', 'm', 'p'], ['l', 'i', 'v', 'e', 's']]
-  const [word, setWord] = useState(['g', 'a', 't', 'o', 'r']);
-  const [scramble, setScramble] = useState(['o', 't', 'a', 'g', 'r'])
-  const [index, setIndex] = useState(0)
-  const [solution, setSolution] = useState([])
-  const [score, setScore] = useState(0)
-  const [clicks, setClicks] = useState(0)
-  const [timerId, setTimerId] = useState();
-  const [timer, setTimer] = useState(0);
 
-  const navigateToNext = () => {
-    navigate('/game4-instruct');
-  };
-  
-  const onStart = () => {
-    setTimerId(
-      setInterval(() => {
-        setTimer(state => state + 1);
-      }, 1000)
-    );
+  const words = [
+    ['r', 'e', 'g', 'a', 'l'], 
+    ['r', 'i', 'v', 'a', 'l'], 
+    ['c', 'h', 'o', 'm', 'p'], 
+    ['s', 'p', 'a', 'c', 'e'], 
+    ['s', 't', 'a', 'm', 'p']
+  ];
+
+  const [currentWord, setCurrentWord] = useState(words[0]);
+  const [scrambledWord, setScrambledWord] = useState([]);
+  const [userGuess, setUserGuess] = useState([]);
+  const [score, setScore] = useState(0);
+  const [index, setIndex] = useState(0);
+  const [timer, setTimer] = useState(30);
+
+  // Shuffle function
+  const shuffleWord = (word) => {
+    let shuffled = [...word].sort(() => Math.random() - 0.5);
+    return shuffled;
   };
 
-  const onStop = () => {
-    clearInterval(timerId);
-  };
-
+  // Start new round
   useEffect(() => {
-    clearInterval(timerId);
-  }, [timerId]);
+    setScrambledWord(shuffleWord(currentWord));
+  }, [currentWord]);
 
-  const shuffle = (array) => {
-    let currentIndex = array.length,  randomIndex;
-
-    // While there remain elements to shuffle.
-    while (currentIndex != 0) {
-
-      // Pick a remaining element.
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex--;
-
-      // And swap it with the current element.
-      [array[currentIndex], array[randomIndex]] = [
-        array[randomIndex], array[currentIndex]];
+  // Timer countdown
+  useEffect(() => {
+    if (timer > 0) {
+      const countdown = setInterval(() => {
+        setTimer((prev) => prev - 1);
+      }, 1000);
+      return () => clearInterval(countdown);
+    } else {
+      navigate('/game4-instruct');
     }
+  }, [timer, navigate]);
 
-    return array;
-  }
+  // Handle letter click
+  const handleLetterClick = (letter) => {
+    setUserGuess([...userGuess, letter]);
 
-  const updateSolution = (slot) => {
-    setSolution(solution => [...solution, scramble[slot]])
-    if (solution.length == 5){
-      if (solution[0] == word[0] && solution[1] == word[1] && solution[2] == word[2] && solution[3] == word[3] && solution[4] == word[4]){
-        setScore(score + 1);
-      };
-      setClicks(clicks + 1)
-      setWord(stringArray[index]);
-      setScramble(shuffle(stringArray2[index]));
-      setSolution([]);
-      setIndex(index + 1)
-    };
+    if (userGuess.length === 4) {
+      checkAnswer([...userGuess, letter]);
+    }
   };
 
-  const handleClick = (slot) => {
-    updateSolution(slot);
+  // Check if the answer is correct
+  const checkAnswer = (guess) => {
+    if (JSON.stringify(guess) === JSON.stringify(currentWord)) {
+      setScore(score + 1);
     }
-
-
-
+    
+    // Move to the next word
+    let nextIndex = index + 1;
+    if (nextIndex < words.length) {
+      setIndex(nextIndex);
+      setCurrentWord(words[nextIndex]);
+      setUserGuess([]);
+    } else {
+      navigate('/game4-instruct');
+    }
+  };
 
   return (
-    <div class="container">
-      <div class="grid3">
-        <div class="box33"><h1>{solution[0]}</h1></div>
-        <div class="box33"><h1>{solution[1]}</h1></div>
-        <div class="box33"><h1>{solution[2]}</h1></div>
-        <div class="box33"><h1>{solution[3]}</h1></div>
-        <div class="box33"><h1>{solution[4]}</h1></div>
-        <div class="box3" onClick={() => handleClick(0)}><h1>{scramble[0]}</h1></div>
-        <div class="box3" onClick={() => handleClick(1)}><h1>{scramble[1]}</h1></div>
-        <div class="box3" onClick={() => handleClick(2)}><h1>{scramble[2]}</h1></div>
-        <div class="box3" onClick={() => handleClick(3)}><h1>{scramble[3]}</h1></div>
-        <div class="box3" onClick={() => handleClick(4)}><h1>{scramble[4]}</h1></div>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-white-100 text-gray-800 p-6 relative">
+      {/* Score & Timer at the Top */}
+      <div className="absolute top-4 w-full flex justify-between px-10">
+        <h2 className="text-2xl font-bold text-green-600">Score: {score}</h2>
+        <h2 className="text-2xl font-bold text-red-500">Time: {timer}s</h2>
       </div>
-      <div>
-        <h1 class="score3">{score}</h1>
+
+      {/* Centered Heading */}
+      <h1 className="text-4xl font-bold text-blue-700 mb-6 text-center mt-16">
+        Game 3
+      </h1>
+
+      {/* Unscramble Instruction */}
+      <h2 className="text-2xl font-semibold mb-6 text-center">
+        Unscramble the Word!
+      </h2>
+
+      {/* User's Guess */}
+      <div className="flex gap-3 mb-6">
+        {userGuess.map((letter, i) => (
+          <div key={i} className="w-16 h-16 flex items-center justify-center bg-green-300 text-xl font-bold border rounded-lg">
+            {letter}
+          </div>
+        ))}
       </div>
-      <div>
-        <h1 class="timer3">{useEffect(() => {onStart()}, [])}</h1>
-        {timer < 31 && <h1 class="timer3">{timer}</h1>}
-        {timer > 30 && navigateToNext()}
+
+      {/* Scrambled Letters */}
+      <div className="grid grid-cols-5 gap-4">
+        {scrambledWord.map((letter, i) => (
+          <button
+            key={i}
+            className="w-16 h-16 bg-yellow-400 text-xl font-bold border rounded-lg shadow-lg hover:bg-yellow-500 transition-all"
+            onClick={() => handleLetterClick(letter)}
+          >
+            {letter}
+          </button>
+        ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Game3
+export default Game3;
