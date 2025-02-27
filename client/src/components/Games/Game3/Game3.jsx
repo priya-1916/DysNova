@@ -1,36 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import '@fontsource/opendyslexic';
+import './Game3.css'; // Import CSS file
 
 const Game3 = () => {
   const navigate = useNavigate();
 
   const words = [
-    ['r', 'e', 'g', 'a', 'l'], 
-    ['r', 'i', 'v', 'a', 'l'], 
-    ['c', 'h', 'o', 'm', 'p'], 
-    ['s', 'p', 'a', 'c', 'e'], 
-    ['s', 't', 'a', 'm', 'p']
+    ['t', 'a', 'b', 'l', 'e'],
+    ['p', 'a', 'r', 't', 'y'],
+    ['g', 'r', 'a', 'p', 'e'],
+    ['s', 'm', 'i', 'l', 'e'],
+    ['b', 'r', 'i', 'd', 'e']
   ];
 
-  const [currentWord, setCurrentWord] = useState(words[0]);
+  const [currentWord, setCurrentWord] = useState([]);
   const [scrambledWord, setScrambledWord] = useState([]);
   const [userGuess, setUserGuess] = useState([]);
   const [score, setScore] = useState(0);
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(30);
+  const [isReading, setIsReading] = useState(false);
+  const [isDyslexicFont, setIsDyslexicFont] = useState(false);
 
-  // Shuffle function
-  const shuffleWord = (word) => {
-    let shuffled = [...word].sort(() => Math.random() - 0.5);
-    return shuffled;
-  };
-
-  // Start new round
   useEffect(() => {
-    setScrambledWord(shuffleWord(currentWord));
-  }, [currentWord]);
+    setCurrentWord(words[index]);
+    setScrambledWord(shuffleWord(words[index]));
+  }, [index]);
 
-  // Timer countdown
   useEffect(() => {
     if (timer > 0) {
       const countdown = setInterval(() => {
@@ -42,70 +39,90 @@ const Game3 = () => {
     }
   }, [timer, navigate]);
 
-  // Handle letter click
+  useEffect(() => {
+    document.body.classList.toggle('dark-mode', localStorage.getItem('darkMode') === 'true');
+  }, []);
+
+  const shuffleWord = (word) => {
+    let shuffled = [...word].sort(() => Math.random() - 0.5);
+    while (JSON.stringify(shuffled) === JSON.stringify(word)) {
+      shuffled = [...word].sort(() => Math.random() - 0.5);
+    }
+    return shuffled;
+  };
+
   const handleLetterClick = (letter) => {
     setUserGuess([...userGuess, letter]);
-
-    if (userGuess.length === 4) {
+    if (userGuess.length === currentWord.length - 1) {
       checkAnswer([...userGuess, letter]);
     }
   };
 
-  // Check if the answer is correct
   const checkAnswer = (guess) => {
     if (JSON.stringify(guess) === JSON.stringify(currentWord)) {
       setScore(score + 1);
     }
-    
-    // Move to the next word
     let nextIndex = index + 1;
     if (nextIndex < words.length) {
       setIndex(nextIndex);
-      setCurrentWord(words[nextIndex]);
       setUserGuess([]);
     } else {
       navigate('/game4-instruct');
     }
   };
 
+  const readAloud = () => {
+    if (!isReading) {
+      setIsReading(true);
+      const speech = new SpeechSynthesisUtterance(scrambledWord.join(' '));
+      speech.lang = 'en-US';
+      speech.onend = () => setIsReading(false);
+      window.speechSynthesis.speak(speech);
+    }
+  };
+
+  const toggleDarkMode = () => {
+    const newDarkMode = !(localStorage.getItem('darkMode') === 'true');
+    localStorage.setItem('darkMode', newDarkMode);
+    document.body.classList.toggle('dark-mode', newDarkMode);
+  };
+
+  const toggleFont = () => {
+    setIsDyslexicFont(!isDyslexicFont);
+  };
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-white-100 text-gray-800 p-6 relative">
-      {/* Score & Timer at the Top */}
-      <div className="absolute top-4 w-full flex justify-between px-10">
-        <h2 className="text-2xl font-bold text-green-600">Score: {score}</h2>
-        <h2 className="text-2xl font-bold text-red-500">Time: {timer}s</h2>
+    <div className={`${isDyslexicFont ? 'dyslexic-font' : ''}`}>
+      <div className="header">
+        <button onClick={toggleDarkMode} className="toggle-btn">
+          {document.body.classList.contains('dark-mode') ? '☀️ Light Mode' : '🌙 Dark Mode'}
+        </button>
+        <button onClick={readAloud} className="toggle-btn">🔊 Read Aloud</button>
+        <button onClick={toggleFont} className="toggle-btn">
+          {isDyslexicFont ? '🔠 Normal Font' : '🧠 Dyslexic Font'}
+        </button>
       </div>
 
-      {/* Centered Heading */}
-      <h1 className="text-4xl font-bold text-blue-700 mb-6 text-center mt-16">
-        Game 3
-      </h1>
+      <h1 className="title">Game 3</h1>
+      <h2 className="subtitle">Rearrange the Letters to Form a Word!</h2>
 
-      {/* Unscramble Instruction */}
-      <h2 className="text-2xl font-semibold mb-6 text-center">
-        Unscramble the Word!
-      </h2>
-
-      {/* User's Guess */}
-      <div className="flex gap-3 mb-6">
+      <div className="word-container">
         {userGuess.map((letter, i) => (
-          <div key={i} className="w-16 h-16 flex items-center justify-center bg-green-300 text-xl font-bold border rounded-lg">
-            {letter}
-          </div>
+          <div key={i} className="letter-box">{letter}</div>
         ))}
       </div>
 
-      {/* Scrambled Letters */}
-      <div className="grid grid-cols-5 gap-4">
+      <div className="letter-grid">
         {scrambledWord.map((letter, i) => (
-          <button
-            key={i}
-            className="w-16 h-16 bg-yellow-400 text-xl font-bold border rounded-lg shadow-lg hover:bg-yellow-500 transition-all"
-            onClick={() => handleLetterClick(letter)}
-          >
+          <button key={i} className="letter-btn" onClick={() => handleLetterClick(letter)}>
             {letter}
           </button>
         ))}
+      </div>
+
+      <div className="status-bar">
+        <span className="score">Score: {score}</span>
+        <span className="timer">Time: {timer}s</span>
       </div>
     </div>
   );
