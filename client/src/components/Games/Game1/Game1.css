@@ -1,55 +1,116 @@
-.game-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    text-align: center;
-}
+/* Game1.css */
 
-.game-title {
-    font-size: 2rem;
-    font-weight: bold;
-    margin-bottom: 20px;
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
     color: #333;
-}
-
-.grid1 {
-    display: grid;
-    grid-template-columns: repeat(5, 100px);
-    grid-gap: 15px;
-    justify-content: center;
-    align-items: center;
-    margin-top: 20px;
-}
-
-.box1 {
-    border: 2px solid black;
+    margin: 0;
+    padding: 0;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  /* Dark Mode */
+  body.dark-mode {
+    background-color: #1e1e1e;
+    color: #ffffff;
+  }
+  
+  /* Dyslexic Font */
+  .dyslexic-font {
+    font-family: 'OpenDyslexic', sans-serif;
+  }
+  
+  /* Header */
+  .header {
     display: flex;
-    align-items: center;
     justify-content: center;
-    border-radius: 10px;
-    width: 100px;
-    height: 100px;
-    font-size: 1.5rem;
-    background-color: #f8f8f8;
+    gap: 15px;
+    padding: 10px;
+    background: #333;
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+  
+  .toggle-btn {
+    background: #ff8c00;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
     cursor: pointer;
-    transition: 0.3s;
-}
-
-.box1:hover {
-    background-color: #ddd;
-}
-
-.info-container {
+    border-radius: 5px;
+    transition: background 0.3s;
+  }
+  
+  .toggle-btn:hover {
+    background: #e07b00;
+  }
+  
+  /* Game Title */
+  .game-title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    margin: 15px 0;
+  }
+  
+  /* Fixed Score & Timer */
+  .fixed-info {
     display: flex;
     justify-content: space-between;
-    width: 250px;
-    margin-top: 20px;
-}
-
-.score1, .timer1 {
-    font-size: 1.2rem;
+    padding: 10px 20px;
+    font-size: 18px;
     font-weight: bold;
-    color: #333;
-}
+    background: #444;
+    color: white;
+    border-radius: 10px;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+  
+  /* Grid Layout */
+  .grid1 {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    padding: 20px;
+    justify-content: center;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  /* Grid Boxes */
+  .box1 {
+    width: 60px;
+    height: 60px;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  .box1:hover {
+    background-color: #ddd;
+    transform: scale(1.1);
+  }
+  
+  /* Dark Mode Box Styling */
+  body.dark-mode .box1 {
+    background-color: #444;
+    color: white;
+  }
+  
+  body.dark-mode .box1:hover {
+    background-color: #666;
+  }
+  
+  

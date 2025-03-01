@@ -35,7 +35,7 @@ const Game3 = () => {
       }, 1000);
       return () => clearInterval(countdown);
     } else {
-      navigate('/game4-instruct');
+      navigate('/game-complete');
     }
   }, [timer, navigate]);
 
@@ -67,7 +67,7 @@ const Game3 = () => {
       setIndex(nextIndex);
       setUserGuess([]);
     } else {
-      navigate('/game4-instruct');
+      navigate('/game-complete');
     }
   };
 

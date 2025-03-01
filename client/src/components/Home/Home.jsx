@@ -1,31 +1,46 @@
-import React from 'react'
-import "../Home/Home.css"
-import home_img from "../../assets/home_pic.jpeg"
-
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import "./Home.css";
+import home_img from "../../assets/home_pic.jpeg";
 
 const Home = () => {
-  return (
-      <>
-      <main>
-      
-        <section>
-        <div className='ml-30 mt-40 text-5xl font-bold '> Breaking Barriers,<br /> <div className='ml-15'>Building Futures</div></div>
-        <p className='mt-4 ml-30 mr-220'>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Possimus quos, doloribus sunt nihil cupiditate impedit rerum nisi laboriosam quo quae! Nisi quis, asperiores debitis dolores deleniti nemo dolor vitae deserunt!</p>
-        <button class='button-style'>Take a Free test <i className="fa-solid fa-greater-than ml-5 "></i></button>
-        <div className='flex space-x-20  mt-30 ml-30'>
-        <div className='font-semibold text-2xl'><i className="fa-solid fa-gamepad mr-4 fa-2x"></i>Interactive games</div>
-        <div className='font-semibold text-2xl'><i className="fa-solid fa-people-line mr-4 fa-2x"></i>Expert Guidance</div>
-        <div className='font-semibold text-2xl'><i className="fa-solid fa-check mr-4 fa-2x"></i>Free Testing</div>
-        </div>
-        </section>
-        <aside>
-          {/* <img src={home_img} alt="" /> */}
-        </aside>
-        
-        </main>
-    
-      </>
-  )
-}
+  const navigate = useNavigate();
 
-export default Home
+  return (
+    <>
+      <main className="home-container">
+        <section className="home-content">
+          <h1 className="home-title">
+            Breaking Barriers, <br />
+            <span className="home-subtitle">Building Futures</span>
+          </h1>
+          <p className="home-description">
+            Dyslexia affects millions worldwide, making reading and learning challenging. Our interactive platform provides engaging games, expert guidance, and free testing to help individuals overcome these barriers and unlock their full potential.
+          </p>
+
+          <button className="button-style" onClick={() => navigate("/login")}>
+            Take a Free Test <i className="fa-solid fa-greater-than ml-5"></i>
+          </button>
+
+          <div className="features-container">
+            <div className="feature-card">
+              <i className="fa-solid fa-gamepad feature-icon"></i> Interactive Games
+            </div>
+            <div className="feature-card">
+              <i className="fa-solid fa-people-line feature-icon"></i> Expert Guidance
+            </div>
+            <div className="feature-card">
+              <i className="fa-solid fa-check feature-icon"></i> Free Testing
+            </div>
+          </div>
+        </section>
+
+        <aside className="home-image-container">
+          <img src={home_img} alt="Dyslexia Awareness" className="home-image" />
+        </aside>
+      </main>
+    </>
+  );
+};
+
+export default Home;

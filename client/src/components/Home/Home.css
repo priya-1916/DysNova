@@ -1,17 +1,150 @@
+/* General Styling */
+html, body {
+    font-family: "Arial", sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+    height: 100%;
+    width: 100%;
+    overflow-x: hidden;
+}
 
-@layer components
-{
-    .button-style
-    {
-        margin-left: 110px;
-        margin-top: 30px;
-        font-size:large;
-        background-color: green;
-        color:white;
-        padding:15px 30px 15px 15px;
-        border-radius: 30px;
-        
-        
+/* Home Page Layout */
+.home-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100vw;  /* Full viewport width */
+    height: 100vh; /* Full viewport height */
+    padding: 40px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Left Section - Content */
+.home-content {
+    flex: 1;
+    padding: 20px;
+    max-width: 600px; /* Ensures text doesn’t stretch too much */
+}
+
+/* Title and Subtitle */
+.home-title {
+    font-size: 42px;
+    font-weight: bold;
+    color: #007bff;
+    margin-bottom: 10px;
+}
+
+.home-subtitle {
+    font-size: 32px;
+    color: #0056b3;
+}
+
+/* Description */
+.home-description {
+    font-size: 18px;
+    color: #444;
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+/* Button */
+.button-style {
+    background-color: #007bff;
+    color: white;
+    padding: 14px 24px;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.button-style:hover {
+    background-color: #0056b3;
+}
+
+/* Features Section */
+.features-container {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 30px;
+}
+
+.feature-card {
+    background-color: #e3f2fd;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    width: 180px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+}
+
+.feature-card:hover {
+    transform: scale(1.05);
+}
+
+/* Icons */
+.feature-icon {
+    font-size: 28px;
+    margin-bottom: 8px;
+    color: #007bff;
+}
+
+/* Right Section - Image */
+.home-image-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.home-image {
+    width: 90%;
+    max-width: 500px;
+    height: auto;
+    border-radius: 10px;
+}
+
+/* Responsive Design */
+@media (max-width: 900px) {
+    .home-container {
+        flex-direction: column;
+        text-align: center;
+        height: auto;
+        padding: 20px;
     }
-    
+
+    .home-image-container {
+        margin-top: 20px;
+    }
+
+    .features-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .feature-card {
+        width: 100%;
+        max-width: 200px;
+    }
+}
+.navbar {
+    position: fixed; /* Keeps navbar always visible */
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: white; /* Adjust as needed */
+    padding: 15px 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000; /* Ensures it stays above other elements */
 }
